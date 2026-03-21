@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Air It Out</title>
+
+<link href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+body{
+margin:0;
+background:#f4f1ea;
+font-family:'Inter',sans-serif;
+color:#1c1c1c;
+}
+
+.container{
+max-width:720px;
+margin:auto;
+padding:50px 20px;
+}
+
+h1{
+font-family:'PT Serif',serif;
+font-size:34px;
+margin-bottom:10px;
+}
+
+.tagline{
+color:#6b645d;
+margin-bottom:30px;
+}
+
+.card{
+background:#fffdf8;
+padding:28px;
+border-radius:18px;
+margin-top:20px;
+box-shadow:0 20px 40px rgba(0,0,0,0.05);
+border:1px solid #ece6dc;
+animation:fade 0.5s ease;
+}
+
+@keyframes fade{
+from{opacity:0; transform:translateY(10px);}
+to{opacity:1; transform:translateY(0);}
+}
+
+button{
+width:100%;
+padding:16px;
+margin-top:10px;
+border:none;
+border-radius:12px;
+background:#6f8f7b;
+color:white;
+font-size:15px;
+cursor:pointer;
+}
+
+button:hover{
+background:#5e7c6b;
+}
+
+.secondary{
+background:#e8e3ef;
+color:#2d2633;
+}
+
+.hidden{
+display:none;
+}
+
+textarea{
+width:100%;
+min-height:140px;
+margin-top:12px;
+padding:12px;
+border-radius:10px;
+border:1px solid #ddd;
+}
+
+.section{
+margin-top:16px;
+line-height:1.7;
+}
+
+.diagram{
+background:#f3efe9;
+padding:14px;
+border-radius:10px;
+margin-top:10px;
+font-size:14px;
+color:#555;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Air It Out</h1>
+<p class="tagline">The stuff people don’t usually say out loud.</p>
+
+<!-- HOME -->
+
+<div class="card" id="home">
+
+<button onclick="start('numb')">I feel numb / checked out</button>
+<button onclick="start('overwhelm')">I’m overwhelmed / spiraling</button>
+<button onclick="start('self')">I’m in my head / tearing myself apart</button>
+<button onclick="start('anger')">I’m angry / reactive</button>
+<button onclick="start('invisible')">I feel alone / unseen</button>
+
+</div>
+
+<!-- MODULE -->
+
+<div class="card hidden" id="module">
+
+<div class="section" id="content"></div>
+
+<button onclick="next()">continue</button>
+
+</div>
+
+<!-- ACTION -->
+
+<div class="card hidden" id="action">
+
+<div class="section" id="tool"></div>
+
+<button onclick="next2()">continue</button>
+
+</div>
+
+<!-- REFLECTION -->
+
+<div class="card hidden" id="reflectionCard">
+
+<p><strong>say it how it actually is</strong></p>
+
+<textarea id="reflection" placeholder="no filter. no perfect wording. just be honest."></textarea>
+
+<button onclick="save()">save</button>
+<button class="secondary" onclick="restart()">start over</button>
+
+</div>
+
+</div>
+
+<script>
+
+let state="";
+
+function start(s){
+state=s;
+document.getElementById("home").classList.add("hidden");
+document.getElementById("module").classList.remove("hidden");
+loadContent();
+}
+
+function loadContent(){
+
+let data={
+
+numb:`
+<strong>you’re not lazy. you just checked out.</strong><br><br>
+
+at some point things got heavy<br>
+and instead of breaking down<br>
+you shut it off<br><br>
+
+and now you’re here<br>
+not really feeling anything<br>
+but also not feeling good either<br><br>
+
+you didn’t choose this randomly<br>
+this is what happens when you’ve been pushing through too much<br><br>
+
+you already know what needs to be done<br>
+you’re not confused<br>
+you’re just disconnected<br><br>
+
+you’re not broken<br>
+you’re just tired<br><br>
+
+what you’ve been through didn’t break you<br>
+it shaped how you move through the world<br>
+and your story is becoming fuel for something
+`,
+
+overwhelm:`
+<strong>you’re not losing control. you’re overloaded.</strong><br><br>
+
+this isn’t just anxiety<br>
+this is everything hitting at once<br><br>
+
+everything you didn’t process<br>
+everything you pushed through<br><br>
+
+and now it’s all here<br><br>
+
+the frustrating part is<br>
+you already understand it<br><br>
+
+but your body hasn’t caught up yet<br><br>
+
+so you feel like you’re spiraling<br><br>
+
+you’re not<br>
+you’re just finally feeling it<br><br>
+
+and you don’t need to solve everything tonight
+`,
+
+self:`
+<strong>that voice in your head didn’t start with you.</strong><br><br>
+
+the one telling you you’re not enough<br>
+not attractive enough<br>
+not good enough<br><br>
+
+it feels like truth<br>
+but it’s not neutral<br><br>
+
+and yeah<br>
+you know logically it’s not true<br><br>
+
+but that doesn’t make it go away<br><br>
+
+you don’t need to jump to loving yourself<br><br>
+
+just start here:<br><br>
+
+“maybe this voice isn’t the full truth either”
+`,
+
+anger:`
+<strong>this isn’t just anger. this is buildup.</strong><br><br>
+
+things you didn’t say<br>
+things you let slide<br><br>
+
+it stacked up<br><br>
+
+and now it’s coming out<br><br>
+
+you’re not crazy<br>
+you hit a limit<br><br>
+
+something in you needed to be heard
+`,
+
+invisible:`
+<strong>feeling unseen hits deeper than people admit.</strong><br><br>
+
+it makes you stop trying<br><br>
+
+because what’s the point if no one really sees you<br><br>
+
+but just because you’ve felt invisible<br>
+doesn’t mean you are<br><br>
+
+it just means you’ve been in spaces<br>
+that didn’t know how to see you
+`
+
+};
+
+document.getElementById("content").innerHTML=data[state];
+
+document.getElementById("tool").innerHTML=`
+<strong>don’t overthink this — just try one:</strong><br><br>
+
+• press your feet into the ground<br>
+• look around and name 5 things you see<br>
+• write everything in your head without stopping for 2 minutes<br><br>
+
+<strong>real talk:</strong><br>
+you don’t need to fix everything right now
+`;
+
+}
+
+function next(){
+document.getElementById("module").classList.add("hidden");
+document.getElementById("action").classList.remove("hidden");
+}
+
+function next2(){
+document.getElementById("action").classList.add("hidden");
+document.getElementById("reflectionCard").classList.remove("hidden");
+}
+
+function save(){
+localStorage.setItem("air_it_out_reflection", document.getElementById("reflection").value);
+alert("saved.");
+}
+
+function restart(){
+location.reload();
+}
+
+</script>
+
+</body>
+</html>
